@@ -41,7 +41,6 @@ import (
 	"net/http"
 	"os"
 	"os/user"
-	"path/filepath"
 	"strconv"
 	"sync"
 	"time"
@@ -50,7 +49,7 @@ import (
 )
 
 var (
-	binaryName  = filepath.Base(os.Args[0])
+	// binaryName  = filepath.Base(os.Args[0])
 	binaryHash  string
 	hostname    string
 	username    string
@@ -114,7 +113,6 @@ SHA256 {{.BinaryHash}}<br>
 Running as {{.Username}} on {{.Hostname}}<br>
 IsProd: {{.Prod}}<br>
 Load {{.LoadAvg}}<br>
-View <a href=/statusz>statusz</a>
 </div>
 <div style="clear: both;"> </div>
 </div>`
@@ -139,7 +137,13 @@ func reparse(sections []section) (*template.Template, error) {
 	return template.New("").Funcs(funcs).Parse(buf.String())
 }
 
+func HealthCheckHandler(w http.ResponseWriter, r *http.Request) {
+	fmt.Fprint(w, "ok")
+}
+
 func StatusHandler(w http.ResponseWriter, r *http.Request) {
+	w.Header().Set("X-Frame-Options", "SAMEORIGIN")
+	w.Header().Set("Server", "easfs")
 	lock.Lock()
 	defer lock.Unlock()
 
@@ -162,9 +166,10 @@ func StatusHandler(w http.ResponseWriter, r *http.Request) {
 		Up         string
 		LoadAvg    string
 		Prod       bool
+		SitePath   string
 	}{
 		Sections:   sections,
-		BinaryName: binaryName,
+		BinaryName: "EASFS",
 		BinaryHash: binaryHash,
 		GitVersion: GitVersion,
 		GitCommit:  GitCommit,
@@ -215,12 +220,13 @@ func init() {
 	}
 
 	http.HandleFunc("/statusz", StatusHandler)
+	http.HandleFunc("/healthz", HealthCheckHandler)
 }
 
 // AddStatusPart adds a new section to status. frag is used as a
-// subtemplate of the template used to render /debug/status, and will
+// subtemplate of the template used to render /statusz, and will
 // be executed using the value of invoking f at the time of the
-// /debug/status request. frag is parsed and executed with the
+// /statusz request. frag is parsed and executed with the
 // html/template package. Functions registered with AddStatusFuncs
 // may be used in the template.
 func AddStatusPart(banner, frag string, f func(context.Context) interface{}) {
@@ -247,7 +253,7 @@ func AddStatusPart(banner, frag string, f func(context.Context) interface{}) {
 }
 
 // AddStatusSection registers a function that generates extra
-// information for /debug/status. If banner is not empty, it will be
+// information for /statusz. If banner is not empty, it will be
 // used as a header before the information. If more complex output
 // than a simple string is required use AddStatusPart instead.
 func AddStatusSection(banner string, f func(context.Context) string) {

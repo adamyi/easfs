@@ -67,7 +67,7 @@ func ExpandUpperTab(tab UpperTab) UpperTab {
 		for _, tabcontent := range tab.Contents {
 			ltabc := tabcontent
 			if tabcontent.Include != "" {
-				tocContent, err := ioutil.ReadFile("src/content/" + tabcontent.Include)
+				tocContent, err := ioutil.ReadFile(flagSitePath + tabcontent.Include)
 				if err != nil {
 					fmt.Println(err)
 				}
@@ -93,7 +93,7 @@ func ExpandBook(book Book) Book {
 	ret := Book{}
 	for _, tab := range book.UpperTabs {
 		if tab.Include != "" {
-			tocContent, err := ioutil.ReadFile("src/content/" + tab.Include)
+			tocContent, err := ioutil.ReadFile(flagSitePath + tab.Include)
 			if err != nil {
 				fmt.Println(err)
 			}
@@ -116,7 +116,7 @@ func ExpandBook(book Book) Book {
 }
 
 func ParseBook(filepath string) (Book, error) {
-	bookContent, err := ioutil.ReadFile("src/content/" + filepath)
+	bookContent, err := ioutil.ReadFile(flagSitePath + filepath)
 	if err != nil {
 		return Book{}, err
 	}

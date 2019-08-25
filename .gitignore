@@ -12,12 +12,4 @@ static/scripts/jquery-bundle.js
 static/scripts/prettify-bundle.js
 
 ## Source code for adamyi.com
-src/
-
-## Tools for adamyi.com
-gulp-tasks/*
-gulpfile.js
-node_modules/*
-package-lock.json
-package.json
-npm-debug.log
+site/

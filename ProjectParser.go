@@ -11,7 +11,6 @@ type Project struct {
 	Name                      string   `yaml:"name"`
 	Description               string   `yaml:"description"`
 	HomeURL                   string   `yaml:"home_url"`
-	BuganizerID               string   `yaml:"buganizer_id"`
 	Color                     string   `yaml:"color"`
 	ContentLicense            string   `yaml:"content_license"`
 	FooterPath                string   `yaml:"footer_path"`
@@ -26,11 +25,10 @@ type Project struct {
 			Height int    `yaml:"height"`
 		} `yaml:"image"`
 	} `yaml:"social_media"`
-	GcsID string `yaml:"gcs_id"`
 }
 
 func ParseProject(filepath string) (*Project, *Project, error) {
-	projectContent, err := ioutil.ReadFile("src/content/" + filepath)
+	projectContent, err := ioutil.ReadFile(flagSitePath + filepath)
 	if err != nil {
 		return nil, nil, err
 	}
@@ -42,7 +40,7 @@ func ParseProject(filepath string) (*Project, *Project, error) {
 	if project.ParentProjectMetadataPath == "" {
 		return &project, nil, nil
 	}
-	parentProjectContent, err := ioutil.ReadFile("src/content/" + project.ParentProjectMetadataPath)
+	parentProjectContent, err := ioutil.ReadFile(flagSitePath + project.ParentProjectMetadataPath)
 	if err != nil {
 		return nil, nil, err
 	}

@@ -10,7 +10,7 @@ import (
 func GetIndex(w http.ResponseWriter, path string) error {
 	extensions := [3]string{"_index.yaml", "index.md", "index.html"}
 	for _, ext := range extensions {
-		fileLocation := "src/content/" + path + ext
+		fileLocation := flagSitePath + path + ext
 		// fmt.Printf("checking %s\n", fileLocation)
 		content, err := ioutil.ReadFile(fileLocation)
 		if err == nil {
@@ -30,7 +30,7 @@ func GetIndex(w http.ResponseWriter, path string) error {
 func GetPage(w http.ResponseWriter, path string) error {
 	extensions := [5]string{".md", ".html", ".json", ""}
 	for _, ext := range extensions {
-		fileLocation := "src/content/" + path + ext
+		fileLocation := flagSitePath + path + ext
 		// fmt.Printf("checking %s\n", fileLocation)
 		content, err := ioutil.ReadFile(fileLocation)
 		if err == nil {

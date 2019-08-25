@@ -1,21 +1,24 @@
 package main
 
 import (
+	"context"
 	"flag"
-	"log"
 	"net/http"
+	"os/exec"
 	"path/filepath"
 	"strings"
 
 	"github.com/flosch/pongo2"
+	"github.com/golang/glog"
 )
 
 var (
 	flagListenAddress string
 	flagProd          bool
+	flagSitePath      string
 )
 
-func GetEASFSPage(w http.ResponseWriter, r *http.Request) {
+func EASFSHandler(w http.ResponseWriter, r *http.Request) {
 	w.Header().Set("X-Frame-Options", "SAMEORIGIN")
 	w.Header().Set("Server", "easfs")
 
@@ -43,7 +46,7 @@ func GetEASFSPage(w http.ResponseWriter, r *http.Request) {
 	}
 
 	var err error
-	if IsDir("src/content/" + url) {
+	if IsDir(flagSitePath + url) {
 		// make sure that directory ends with a /
 		if !strings.HasSuffix(url, "/") {
 			http.Redirect(w, r, r.URL.Path+"/", 301)
@@ -77,16 +80,38 @@ func GetEASFSPage(w http.ResponseWriter, r *http.Request) {
 
 }
 
+var siteStatusHTML = `Site at {{.SitePath}}<br>Site version {{.SiteVersion}}`
+var SiteVersion = "Unknown"
+
+func siteStatus(context.Context) interface{} {
+	data := struct {
+		SitePath    string
+		SiteVersion string
+	}{
+		SitePath:    flagSitePath,
+		SiteVersion: SiteVersion,
+	}
+	return data
+}
+
 func main() {
-	flag.StringVar(&flagListenAddress, "listen_address", "0.0.0.0:80", "HTTP listen address")
+	AddStatusPart("Site Status", siteStatusHTML, siteStatus)
+	flag.StringVar(&flagListenAddress, "listen", "0.0.0.0:80", "HTTP listen address")
 	flag.BoolVar(&flagProd, "prod", false, "prod env")
+	flag.StringVar(&flagSitePath, "site", "site/content/", "Path to site content")
 	flag.Parse()
+	cmd := exec.Command("git", "describe", "--always", "--match", "v[0-9].*", "--dirty")
+	cmd.Dir = flagSitePath
+	out, err := cmd.Output()
+	if err == nil {
+		SiteVersion = strings.TrimSpace(string(out))
+	}
 	pongo2.RegisterFilter("slugify", Slugify)
 	fs := http.FileServer(http.Dir("static"))
 	http.Handle("/_static/", http.StripPrefix("/_static/", fs))
-	http.HandleFunc("/", GetEASFSPage)
-	err := http.ListenAndServe(flagListenAddress, nil)
+	http.HandleFunc("/", EASFSHandler)
+	err = http.ListenAndServe(flagListenAddress, nil)
 	if err != nil {
-		log.Fatal("ListenAndServe: ", err)
+		glog.Fatal("ListenAndServe: ", err)
 	}
 }

@@ -21,6 +21,8 @@ func ParseMD(w http.ResponseWriter, content []byte, requestPath string) error {
 	context["bodyClass"] = "devsite-doc-page"
 	context["requestPath"] = requestPath
 	context["flagProd"] = flagProd
+	context["siteVersion"] = SiteVersion
+	context["serverVersion"] = GitVersion
 	meta, offset := blackfridaytext.MarkdownMetadata(content)
 	content = content[offset:]
 

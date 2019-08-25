@@ -56,6 +56,8 @@ func ParseYAML(w http.ResponseWriter, content []byte, requestPath string) error 
 	context["bodyClass"] = "devsite-landing-page"
 	context["requestPath"] = requestPath
 	context["flagProd"] = flagProd
+	context["siteVersion"] = SiteVersion
+	context["serverVersion"] = GitVersion
 	parsedYAML := YAMLPage{}
 	err = yaml.Unmarshal(content, &parsedYAML)
 	if err != nil {

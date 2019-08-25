@@ -15,7 +15,7 @@ type Redirects struct {
 }
 
 func ParseRedirects(filepath string) (Redirects, error) {
-	redContent, err := ioutil.ReadFile("src/content/" + filepath + "/_redirects.yaml")
+	redContent, err := ioutil.ReadFile(flagSitePath + filepath + "/_redirects.yaml")
 	red := Redirects{}
 	if err != nil {
 		return red, err

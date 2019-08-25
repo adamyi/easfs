@@ -29,7 +29,7 @@ type Footer struct {
 }
 
 func ParseFooter(filepath string) ([]Promo, []Linkbox, error) {
-	footerContent, err := ioutil.ReadFile("src/content/" + filepath)
+	footerContent, err := ioutil.ReadFile(flagSitePath + filepath)
 	if err != nil {
 		return nil, nil, err
 	}

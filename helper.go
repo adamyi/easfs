@@ -34,7 +34,7 @@ func IsDir(filepath string) bool {
 func GetInclude(include []byte) []byte {
 	// {% include "_shared/latest_articles.html" %}
 	// fmt.Println("src/content/" + string(include[12:len(include)-4]))
-	inc, _ := ioutil.ReadFile("src/content/" + string(include[12:len(include)-4]))
+	inc, _ := ioutil.ReadFile(flagSitePath + string(include[12:len(include)-4]))
 	return inc
 }
 
