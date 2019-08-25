@@ -1,0 +1,110 @@
+.adanyi-nameline  {
+  line-height: 1.1em;
+}
+
+.adamyi-nameline p {
+  font-size: 40px;
+  font-weight: 300;
+  margin: 0;
+}
+
+.adamyi-nameline .first-line {
+  color: #77909c;
+}
+
+.adamyi-nameline .second-line {
+  color: #0273d4;
+}
+
+.adamyi-affiliation-list {
+  list-style: none;
+}
+
+.adamyi-affiliation-check {
+  color: #0075d7;
+  margin-right: 12px;
+}
+
+.adamyi-home-logo {
+  background: url(/images/adamyi.white.web.svg) center center no-repeat;
+  width: 300px;
+  height: 300px;
+  margin-left: 15%;
+}
+
+.adamyi-home-portfolio-button {
+  background: #2B85E7 url(/images/code.transparent.svg) 16px 0px no-repeat;
+  padding-left: 62px;
+}
+
+.devsite-section-nav-mobile {
+  display: block;
+  max-height: 100% !important;
+}
+
+/*
+.devsite-banner {
+  margin-top: 0;
+}
+*/
+
+.devsite-banner-dogfood,.devsite-banner-dogfood :link,.devsite-banner-dogfood :visited {
+    background: #eceff1;
+    color: #546e7a;
+}
+
+.devsite-banner-dogfood .devsite-banner-inner {
+    padding-left: 60px
+}
+
+.devsite-banner-dogfood .devsite-banner-inner::before {
+    color: #78909c;
+    content: 'pets';
+    float: left;
+    font: normal normal normal 24px/1 'Material Icons';
+    font-feature-settings: 'liga';
+    -moz-osx-font-smoothing: grayscale;
+    -webkit-font-smoothing: antialiased;
+    text-rendering: optimizeLegibility;
+    word-wrap: normal;
+    margin-left: -36px
+}
+
+@media screen and (max-width: 720px) {
+    .devsite-banner-dogfood .devsite-banner-inner {
+        padding-left: 52px
+    }
+}
+
+.adamyi-footer--social-btn,
+.adamyi-footer__social-btn {
+  width: 20px;
+  height: 20px;
+
+  padding: 0;
+  margin: 0;
+
+  border: none;
+}
+
+.adamyi-footer--top-section h5,
+.adamyi-footer__top-section h5 {
+  display: inline-flex;
+  text-transform: uppercase;
+}
+
+.adamyi-footer--social-list,
+.adamyi-footer__social-list {
+  list-style: none;
+  display: inline-flex;
+  padding-left: 10px;
+}
+
+.adamyi-footer--social-list li,
+.adamyi-footer__social-list li {
+  float: left;
+
+  margin-bottom: 0;
+  margin-right: 16px;
+}
+

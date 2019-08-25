@@ -1,0 +1,23 @@
+.DS_Store
+scratch/*
+bazel-*
+
+## Files that are updated regularly from DevSite
+# These files will be updated by tools/update-resources.sh
+static/styles/devsite-*.css
+static/scripts/script_foot.js
+static/scripts/script_foot_closure.js
+static/scripts/framebox.js
+static/scripts/jquery-bundle.js
+static/scripts/prettify-bundle.js
+
+## Source code for adamyi.com
+src/
+
+## Tools for adamyi.com
+gulp-tasks/*
+gulpfile.js
+node_modules/*
+package-lock.json
+package.json
+npm-debug.log
