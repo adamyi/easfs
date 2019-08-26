@@ -13,3 +13,7 @@ static/scripts/prettify-bundle.js
 
 ## Source code for adamyi.com
 site/
+
+## SSL Certs and Keys
+cert.pem
+key.pem

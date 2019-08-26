@@ -58,7 +58,8 @@ func ParseYAML(w http.ResponseWriter, content []byte, requestPath string) error 
 	context := pongo2.Context{}
 	context["bodyClass"] = "devsite-landing-page"
 	context["requestPath"] = requestPath
-	context["flagProd"] = flagProd
+	context["isProd"] = flagProd
+	context["domain"] = flagDomain
 	context["siteVersion"] = SiteVersion
 	context["serverVersion"] = GitVersion
 	parsedYAML := YAMLPage{}

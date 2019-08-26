@@ -40,11 +40,11 @@
     <script>
         (function($) {
           
-          devsite.devsite.Init($, {'ENABLE_BLOCKED_VIDEO_PLACEHOLDER': 0, 'SITE_NAME': 'adamyi', 'FULL_SITE_SEARCH_ENABLED': 0, 'ENABLE_CLOUDTRACK': 0, 'VTAGS_ENABLED': 0, 'HISTORY_ENABLED': 0, 'VERSION_HASH': '{{ serverVersion }}-{{ siteVersion }}', 'SCRIPTSAFE_DOMAIN': 'adam-yi.appspot.com', 'ENABLE_BLOCKED_LINK_TOOLTIP': 0, 'ALLOWED_HOSTS': ['.adamyi.com', '.yiad.am', '.munpanel.com'], 'BLOCK_RSS_FEEDS': 0},
+          devsite.devsite.Init($, {'ENABLE_BLOCKED_VIDEO_PLACEHOLDER': 0, 'SITE_NAME': '{{ domain }}', 'FULL_SITE_SEARCH_ENABLED': 0, 'ENABLE_CLOUDTRACK': 0, 'VTAGS_ENABLED': 0, 'HISTORY_ENABLED': 0, 'VERSION_HASH': '{{ serverVersion }}-{{ siteVersion }}', 'SCRIPTSAFE_DOMAIN': 'adam-yi.appspot.com', 'ENABLE_BLOCKED_LINK_TOOLTIP': 0, 'ALLOWED_HOSTS': ['.adamyi.com', '.yiad.am', '.munpanel.com'], 'BLOCK_RSS_FEEDS': 0},
                                '[]','en',
                                true, '',
                                {}, '/',
-                               'https://www.adamyi.com/');
+                               'https://{{ domain }}/');
         })(jQuery);
 
         
@@ -53,7 +53,7 @@
       </script>
 
     <!--onload="devsite.kennedy.InitializeTabbars();"-->
-    {% if flagProd %}
+    {% if isProd %}
       {% include "includes/analytics.html" %}
       {% include "includes/survey.html" %}
     {% endif %}

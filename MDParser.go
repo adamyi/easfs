@@ -20,7 +20,8 @@ func ParseMD(w http.ResponseWriter, content []byte, requestPath string) error {
 	context := pongo2.Context{}
 	context["bodyClass"] = "devsite-doc-page"
 	context["requestPath"] = requestPath
-	context["flagProd"] = flagProd
+	context["isProd"] = flagProd
+	context["domain"] = flagDomain
 	context["siteVersion"] = SiteVersion
 	context["serverVersion"] = GitVersion
 	meta, offset := blackfridaytext.MarkdownMetadata(content)
