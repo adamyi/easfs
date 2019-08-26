@@ -137,6 +137,9 @@ func ParseBook(filepath string) (Book, error) {
 
 func GetLowerTabs(requestPath string, book Book) []LowerTab {
 	ret := []LowerTab{}
+	i := 0
+	maxl := -1
+	selected := -1
 	for _, tab := range book.UpperTabs {
 		for _, ltab := range tab.LowerTabs.Other {
 			lt := LowerTab{}
@@ -144,13 +147,18 @@ func GetLowerTabs(requestPath string, book Book) []LowerTab {
 			if len(ltab.Contents) > 0 {
 				lt.Path = GetFirstTabPath(ltab.Contents)
 				if lt.Path != "" {
-					if LowerTabMatchesPath(requestPath, ltab.Contents) {
-						lt.Selected = true
+					ltpl := LowerTabMatchesPathLength(requestPath, ltab.Contents)
+					if ltpl > maxl {
+						selected = i
 					}
 					ret = append(ret, lt)
+					i += 1
 				}
 			}
 		}
+	}
+	if selected > -1 {
+		ret[selected].Selected = true
 	}
 	return ret
 }
@@ -167,18 +175,27 @@ func GetFirstTabPath(tabContent []LowerTabContent) string {
 	return ""
 }
 
-func LowerTabMatchesPath(requestPath string, tabContent []LowerTabContent) bool {
+func LowerTabMatchesPathLength(requestPath string, tabContent []LowerTabContent) int {
+	ret := -1
 	for _, tc := range tabContent {
 		if tc.Path == requestPath {
-			return true
+			return len(tc.Path)
+		} else if strings.HasPrefix(requestPath, tc.Path) {
+			ret = max(ret, len(tc.Path))
 		}
 		if len(tc.Section) > 0 {
-			if LowerTabMatchesPath(requestPath, tc.Section) {
-				return true
+			ltpl := LowerTabMatchesPathLength(requestPath, tc.Section)
+			ret = max(ret, ltpl)
+			if ret == len(requestPath) {
+				break
 			}
 		}
 	}
-	return false
+	return ret
+}
+
+func LowerTabMatchesPath(requestPath string, tabContent []LowerTabContent) bool {
+	return LowerTabMatchesPathLength(requestPath, tabContent) == len(requestPath)
 }
 
 func GetLeftNav(requestPath string, book Book) string {
