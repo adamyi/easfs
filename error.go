@@ -13,6 +13,6 @@ type EASFSError struct {
 
 func ReturnError(w http.ResponseWriter, err EASFSError) {
 	w.WriteHeader(err.Code)
-	tmpl := template.Must(template.ParseFiles("templates/error.tpl"))
+	tmpl := template.Must(template.ParseFiles("templates/error.html"))
 	tmpl.Execute(w, err)
 }

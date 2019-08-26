@@ -54,6 +54,13 @@ type Book struct {
 	UpperTabs []UpperTab `yaml:"upper_tabs"`
 }
 
+func max(a, b int) int {
+	if a > b {
+		return a
+	}
+	return b
+}
+
 func ExpandUpperTab(tab UpperTab) UpperTab {
 	ret := UpperTab{}
 	ret.Name = tab.Name
@@ -129,48 +136,52 @@ func ParseBook(filepath string) (Book, error) {
 }
 
 func GetLowerTabs(requestPath string, book Book) []LowerTab {
-	// fmt.Println(requestPath)
-	i := 0
-	maxl := 0
-	selected := -1
 	ret := []LowerTab{}
 	for _, tab := range book.UpperTabs {
 		for _, ltab := range tab.LowerTabs.Other {
 			lt := LowerTab{}
 			lt.Name = ltab.Name
 			if len(ltab.Contents) > 0 {
-				// fmt.Println(ltab)
-				lt.Path = GetFirstTabPath(ltab.Contents[0])
-				// fmt.Println(lt.Path)
+				lt.Path = GetFirstTabPath(ltab.Contents)
 				if lt.Path != "" {
-					if strings.HasPrefix(requestPath, lt.Path) && len(lt.Path) >= maxl {
-						maxl = len(lt.Path)
-						selected = i
+					if LowerTabMatchesPath(requestPath, ltab.Contents) {
+						lt.Selected = true
 					}
 					ret = append(ret, lt)
-					i += 1
 				}
 			}
 		}
 	}
-	if selected != -1 {
-		ret[selected].Selected = true
-	}
 	return ret
 }
 
-func GetFirstTabPath(tabContent LowerTabContent) string {
-	if tabContent.Path != "" {
-		return tabContent.Path
-	}
-	if len(tabContent.Section) > 0 {
-		return GetFirstTabPath(tabContent.Section[0])
+func GetFirstTabPath(tabContent []LowerTabContent) string {
+	for _, tc := range tabContent {
+		if tc.Path != "" {
+			return tc.Path
+		}
+		if len(tc.Section) > 0 {
+			return GetFirstTabPath(tc.Section)
+		}
 	}
 	return ""
 }
 
+func LowerTabMatchesPath(requestPath string, tabContent []LowerTabContent) bool {
+	for _, tc := range tabContent {
+		if tc.Path == requestPath {
+			return true
+		}
+		if len(tc.Section) > 0 {
+			if LowerTabMatchesPath(requestPath, tc.Section) {
+				return true
+			}
+		}
+	}
+	return false
+}
+
 func GetLeftNav(requestPath string, book Book) string {
-	result := "<h2>No Matches Found</h2>"
 	var currentUpperTab UpperTab
 	for _, upperTab := range book.UpperTabs {
 		if upperTab.Path != "" && strings.HasPrefix(requestPath, upperTab.Path) {
@@ -179,21 +190,21 @@ func GetLeftNav(requestPath string, book Book) string {
 		}
 	}
 	if currentUpperTab.Path == "" {
-		return result
+		return ""
 	}
 	for _, lt := range currentUpperTab.LowerTabs.Other {
-		ltp := GetFirstTabPath(lt.Contents[0])
-		/*if lowerTabPath is not None and not lowerTabPath.endswith('/'):
-		  tabPathParts = lowerTabPath.split('/')
-		  tabPathParts.pop()
-		  lowerTabPath = '/'.join(tabPathParts)+'/'*/
-		if ltp == "" || strings.HasPrefix(requestPath, ltp) {
-			result = "<ul class=\"devsite-nav-list devsite-nav-expandable\">\n"
+		if len(lt.Contents) == 1 && len(lt.Contents[0].Section) == 0 {
+			continue
+		}
+		if LowerTabMatchesPath(requestPath, lt.Contents) {
+			result := "<ul class=\"devsite-nav-list devsite-nav-expandable\">\n"
 			result += BuildLeftNav(requestPath, lt.Contents)
 			result += "</ul>\n"
+			return result
 		}
+
 	}
-	return result
+	return ""
 }
 
 func BuildLeftNav(requestPath string, ltc []LowerTabContent) string {

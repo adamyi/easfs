@@ -14,6 +14,7 @@ type YAMLPage struct {
 	Title       string `yaml:"title"`
 	LandingPage struct {
 		CustomCSSPath string `yaml:"custom_css_path,omitempty"`
+		CustomJSPath  string `yaml:"custom_js_path,omitempty"`
 		MetaTags      []struct {
 			Name    string `yaml:"name"`
 			Content string `yaml:"content"`
@@ -26,6 +27,7 @@ type YAMLPage struct {
 		Rows []struct {
 			ClassName string `yaml:"classname,omitempty"`
 			Items     []struct {
+				ClassName   string `yaml:"classname,omitempty"`
 				Heading     string `yaml:"heading,omitempty"`
 				Description string `yaml:"description,omitempty"`
 				ImagePath   string `yaml:"image_path,omitempty"`
@@ -33,6 +35,7 @@ type YAMLPage struct {
 				CustomHTML  string `yaml:"custom_html,omitempty"`
 				Buttons     []struct {
 					Label     string `yaml:"label"`
+					Target    string `yaml:"target"`
 					Path      string `yaml:"path"`
 					ClassName string `yaml:"classname"`
 				} `yaml:"buttons,omitempty"`
@@ -76,7 +79,9 @@ func ParseYAML(w http.ResponseWriter, content []byte, requestPath string) error 
 	}
 	// fmt.Println(parsedYAML)
 	context["rows"] = parsedYAML.LandingPage.Rows
+	context["customJSPath"] = parsedYAML.LandingPage.CustomJSPath
 	context["customCSSPath"] = parsedYAML.LandingPage.CustomCSSPath
+	context["metaTags"] = parsedYAML.LandingPage.MetaTags
 	project, parentProject, err := ParseProject(parsedYAML.ProjectPath)
 	if err != nil {
 		return err
@@ -95,17 +100,19 @@ func ParseYAML(w http.ResponseWriter, content []byte, requestPath string) error 
 		context["logoRowTitle"] = project.Name
 	}
 	context["customHeader"] = string(RenderContent([]byte(parsedYAML.LandingPage.Header.CustomHTML)))
-	if parentProject != nil {
-		context["headerTitle"] = project.Name
-	} else if parsedYAML.Title != "" {
+	if parsedYAML.Title != "" {
 		context["headerTitle"] = parsedYAML.Title
-	} else {
+	} else if project.Name != "" {
 		context["headerTitle"] = project.Name
+	} else if parentProject != nil {
+		context["headerTitle"] = parentProject.Name
 	}
 	if parsedYAML.LandingPage.Header.Description != "" {
 		context["headerDescription"] = parsedYAML.LandingPage.Header.Description
-	} else {
+	} else if project.Description != "" {
 		context["headerDescription"] = project.Description
+	} else if parentProject != nil {
+		context["headerDescription"] = parentProject.Description
 	}
 	// TODO: header buttons
 	if parsedYAML.Title != "" {
@@ -115,7 +122,7 @@ func ParseYAML(w http.ResponseWriter, content []byte, requestPath string) error 
 	}
 	context["bookYaml"] = book
 	context["lowerTabs"] = GetLowerTabs(requestPath, book)
-	context["footerPromos"], context["footerLinks"], err = ParseFooter(project.FooterPath)
+	context["footerBanner"], context["footerPromos"], context["footerLinks"], err = ParseFooter(project.FooterPath)
 	if err != nil {
 		return err
 	}

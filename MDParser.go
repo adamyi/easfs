@@ -99,7 +99,7 @@ func ParseMD(w http.ResponseWriter, content []byte, requestPath string) error {
 	context["projectYaml"] = *project
 	context["bookYaml"] = book
 	context["lowerTabs"] = GetLowerTabs(requestPath, book)
-	context["footerPromos"], context["footerLinks"], err = ParseFooter(project.FooterPath)
+	context["footerBanner"], context["footerPromos"], context["footerLinks"], err = ParseFooter(project.FooterPath)
 	if err != nil {
 		return err
 	}

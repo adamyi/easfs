@@ -1,6 +1,9 @@
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1">
-<link rel="canonical" href="https://adamyi.com/{{ requestPath }}">
+{% for meta in metaTags %}
+  <meta name="{{ meta.Name }}" content="{{ meta.Content }}">
+{% endfor %}
+<link rel="canonical" href="https://www.adamyi.com/{{ requestPath }}">
 <link rel="stylesheet" href="//fonts.googleapis.com/css?family=Roboto:300,400,400italic,500,500italic,700,700italic|Roboto+Mono:400,500,700|Material+Icons">
 <link rel="stylesheet" href="/_static/styles/devsite-{{ projectYaml.Color }}.css">
 <title>{{ pageTitle }}</title>
@@ -9,6 +12,9 @@
 {% endif %}
 <link rel="stylesheet" href="/_static/styles/adamyi.css">
 <script src="/_static/scripts/jquery-bundle.js"></script>
+{% if customJSPath %}
+  <script src="{{ customJSPath }}"></script>
+{% endif %}
 {% if projectYaml.SocialMedia.Image.Path %}
 <meta property="og:image" content="{{ projectYaml.SocialMedia.Image.Path }}">
 {% if projectYaml.SocialMedia.Image.Height %}<meta property="og:image:height" content="{{ projectYaml.SocialMedia.Image.Height }}">{% endif %}

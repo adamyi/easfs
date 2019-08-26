@@ -43,6 +43,9 @@ func EASFSHandler(w http.ResponseWriter, r *http.Request) {
 		} else {
 			url = "/_empty_suggestions"
 		}
+	} else if strings.Contains(url, "/_") {
+		ReturnError(w, EASFSError{Code: http.StatusNotFound, Title: "404 Not Found", Description: "The requested URL was not found on this server."})
+		return
 	}
 
 	var err error

@@ -4,10 +4,16 @@
     <a href="https://creativecommons.org/licenses/by/4.0/">Creative Commons
     Attribution 4.0 License</a>.
   </p>
-  {% if updateDate %}
   <p class="devsite-content-footer-date">
-    
+  {% if publishDate %}
+    {% if updateDate and publishDate != updateDate %}
+      First pbulished {{ publishDate }}.
+      Last updated {{ updateDate }}.
+    {% else %}
+      Published {{ publishDate }}.
+    {% endif %}
+  {% elif updateDate %}
     Last updated {{ updateDate }}.
-  </p>
   {% endif %}
+  </p>
 </div>

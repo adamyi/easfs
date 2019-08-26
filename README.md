@@ -16,6 +16,8 @@ bazel build //:easfs
 https://www.adamyi.com/ is served using EASFS and https://github.com/adamyi/adamyi.com
 
 ## License
+It was originally a fork to Google's [Web Fundamentals](https://github.com/google/WebFundamentals) project,
+but is now rewritten in Golang. Yet it still uses the CSS & JS files from Web Fundamentals.
 
 Copyright 2018-2019 Adam Yi.
 
