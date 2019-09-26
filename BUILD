@@ -34,6 +34,7 @@ go_library(
         "@com_github_golang_glog//:go_default_library",
         "@com_github_gosimple_slug//:go_default_library",
         "@com_github_shirou_gopsutil//load:go_default_library",
+        "@com_github_nytimes_gziphandler//:go_default_library",
         "@in_gopkg_russross_blackfriday_v2//:go_default_library",
         "@in_gopkg_yaml_v2//:go_default_library",
     ],

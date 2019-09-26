@@ -3,6 +3,7 @@ module github.com/adamyi/easfs
 go 1.12
 
 require (
+	github.com/NYTimes/gziphandler v1.1.1
 	github.com/flosch/pongo2 v0.0.0-20190707114632-bbf5a6c351f4
 	github.com/gholt/blackfridaytext v0.0.0-20190816214545-16f7b9b9742e
 	github.com/golang/glog v0.0.0-20160126235308-23def4e6c14b

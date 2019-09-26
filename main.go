@@ -8,6 +8,7 @@ import (
 	"path/filepath"
 	"strings"
 
+	"github.com/NYTimes/gziphandler"
 	"github.com/flosch/pongo2"
 	"github.com/golang/glog"
 )
@@ -150,8 +151,8 @@ func main() {
 	}()
 	mux := http.NewServeMux()
 	fs := http.FileServer(http.Dir("static"))
-	mux.Handle("/_static/", http.StripPrefix("/_static/", fs))
-	mux.HandleFunc("/", EASFSHandler)
+	mux.Handle("/_static/", gziphandler.GzipHandler(http.StripPrefix("/_static/", fs)))
+	mux.Handle("/", gziphandler.GzipHandler(http.HandlerFunc(EASFSHandler)))
 	err = http.ListenAndServeTLS(flagSSLListenAddress, flagSSLCert, flagSSLKey, mux)
 	if err != nil {
 		glog.Fatal("ListenAndServeTLS: ", err)
